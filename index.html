@@ -261,11 +261,15 @@
     function bodyUp(e){
       document.removeEventListener('mousemove',bodyMove);
       document.removeEventListener('mouseup',bodyUp);
+      document.removeEventListener('touchmove',bodyMove);
+      document.removeEventListener('touchend',bodyUp);
     }
 
     function bodyDown(e){
       document.addEventListener('mousemove',bodyMove);
       document.addEventListener('mouseup',bodyUp);
+      document.removeEventListener('touchmove',bodyMove);
+      document.removeEventListener('touchend',bodyUp);
       initX = e.clientX;
       initY = e.clientY;
       bodyX = dragAnim.animationData.layers[4].ks.p.k[0].s[0];
@@ -275,6 +279,7 @@
     function init(){
       dragBody = document.getElementById('body');
       dragBody.addEventListener('mousedown',bodyDown);
+      dragBody.addEventListener('touchstart',bodyDown);
     }
 
     dragAnim.addEventListener('DOMLoaded',init);
