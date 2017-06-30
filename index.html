@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>BODYMOVIN</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">
+    <style media="screen">
+      html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+      }
+
+      html {
+        font-size: 12pt;
+      }
+
+      body {
+        background: #cdcdcd;
+      }
+
+      #nav-bar {
+        height: 5em;
+        width: 100%;
+        background: #fff;
+        transition: height 0.5s ease-in-out;
+        overflow: hidden;
+      }
+
+      #burger-btn {
+        height: 5em;
+        width: 5em
+      }
+
+      #burger-btn:hover {
+        animation: scaleBounce 0.5s ease-in-out;
+      }
+
+      @keyframes scaleBounce {
+        0% {
+          transform: scale(1);
+        } 50% {
+          transform: scale(1.1);
+        } 70% {
+          transform: scale(0.9);
+        } 100% {
+          transform: scale(1);
+        }
+      }
+
+      .nav-content {
+        margin-left: 4vw;
+      }
+
+      .nav-option {
+        height: 5em;
+        width: 20em;
+      }
+
+      .body {
+        width: 100%;
+        position: fixed;
+      }
+
+      .scrolling-body {
+        height: 200%;
+      }
+
+      ::-webkit-scrollbar {
+        width: 1px;
+      }
+
+      #sheepScroll, #sheepDrag {
+        width: 100%;
+        top: 10em;
+      }
+
+      .sheepContainer {
+        font-family: 'Open Sans', sans-serif;
+      }
+
+      .sheepContainer h3 {
+        margin-left: 4vw;
+      }
+
+      #scrollingSheep {
+        display: inline;
+      }
+
+      #draggingSheep {
+        display: none;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="body">
+      <div id="nav-bar">
+        <div id="burger-btn"> </div>
+        <div class="nav-content">
+          <div class="nav-option" id="option-one"> </div>
+          <div class="nav-option" id="option-two"> </div>
+        </div>
+      </div>
+      <div id="scrollingSheep">
+        <div class="sheepContainer">
+          <h3>Try scrolling</h3>
+          <div id="sheepScroll"> </div>
+        </div>
+      </div>
+      <div id="draggingSheep">
+        <div class="sheepContainer">
+          <h3>Try dragging</h3>
+          <div id="sheepDrag"> </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scrolling-body"> </div>
+
+
+    <script src="bodymovin.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    var burgerbtn = document.getElementById('burger-btn');
+    var burgerAnim = bodymovin.loadAnimation({
+      container: burgerbtn,
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      path: 'burger.json',
+    })
+
+    function begin() {
+      burgerAnim.goToAndStop(34,true);
+    }
+
+    burgerAnim.addEventListener('DOMLoaded', function() {
+      begin();
+      burgerbtn.addEventListener('click', toggleMenu)
+    })
+
+    var isOpenMenu = false;
+    var navBar = document.getElementById('nav-bar');
+
+    function toggleMenu() {
+      if (isOpenMenu) {
+        isOpenMenu = false;
+        burgerAnim.playSegments([0,34],true);
+        navBar.style.height = '5em';
+      } else {
+        isOpenMenu = true;
+        burgerAnim.playSegments([34,70],true);
+        navBar.style.height = '17em';
+      }
+    }
+
+    var scrollingSheep = document.getElementById('scrollingSheep');
+    var draggingSheep = document.getElementById('draggingSheep');
+
+    var optionOne = document.getElementById('option-one');
+    var optionOneAnim = bodymovin.loadAnimation({
+      container: optionOne,
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      path: 'optionOne.json',
+    })
+
+    optionOneAnim.addEventListener('DOMLoaded', function() {
+      optionOne.addEventListener('mouseenter', function() {
+        optionOneAnim.playSegments([0,30],true);
+      })
+      optionOne.addEventListener('mouseleave', function() {
+        optionOneAnim.playSegments([30,50],true);
+      })
+      optionOne.addEventListener('click', function() {
+        scrollingSheep.style.display = 'inline';
+        draggingSheep.style.display = 'none';
+      })
+    })
+
+    var optionTwo = document.getElementById('option-two');
+    var optionTwoAnim = bodymovin.loadAnimation({
+      container: optionTwo,
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      path: 'optionTwo.json',
+    })
+
+    optionTwoAnim.addEventListener('DOMLoaded', function() {
+      optionTwo.addEventListener('mouseenter', function() {
+        optionTwoAnim.playSegments([0,30],true);
+      })
+      optionTwo.addEventListener('mouseleave', function() {
+        optionTwoAnim.playSegments([30,50],true);
+      })
+      optionTwo.addEventListener('click', function() {
+        scrollingSheep.style.display = 'none';
+        draggingSheep.style.display = 'inline';
+      })
+    })
+
+    var sheep = document.getElementById('sheepScroll');
+    var scrollAnim = bodymovin.loadAnimation({
+      container: sheep,
+      renderer: 'svg',
+      loop: true,
+      autoplay: false,
+      path: 'sheep.json',
+    })
+
+    var last_known_scroll_position = 0;
+    var ticking = false;
+
+    function dancingSheep(scroll_pos) {
+      // do something with the scroll position
+      var positionDec = scroll_pos / (document.documentElement.clientHeight * 0.72) * 120;
+      var positionRound = Math.floor(positionDec);
+      scrollAnim.goToAndStop(positionRound, true);
+    }
+
+    window.addEventListener('scroll', function(e) {
+      last_known_scroll_position = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(function() {
+          dancingSheep(last_known_scroll_position);
+          ticking = false;
+        });
+      }
+      ticking = true;
+    });
+
+    var sheepBody = document.getElementById('sheepDrag');
+    var dragAnim = bodymovin.loadAnimation({
+      container: sheepBody,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'sheepDrag.json',
+    });
+
+    var dragBody;
+    var initX, initY, bodyX, bodyY;
+    var windowX, windowY;
+
+    function bodyMove(e) {
+      var movedX = e.clientX - initX;
+      var movedY = e.clientY - initY;
+      dragAnim.animationData.layers[4].ks.p.k[0].s[0] = bodyX + movedX;
+      dragAnim.animationData.layers[4].ks.p.k[0].e[0] = bodyX + movedX;
+      dragAnim.animationData.layers[4].ks.p.k[0].s[1] = bodyY + movedY;
+      dragAnim.animationData.layers[4].ks.p.k[0].e[1] = bodyY + movedY;
+      console.log(movedY);
+    }
+
+    function bodyUp(e){
+      document.removeEventListener('mousemove',bodyMove);
+      document.removeEventListener('mouseup',bodyUp);
+    }
+
+    function bodyDown(e){
+      document.addEventListener('mousemove',bodyMove);
+      document.addEventListener('mouseup',bodyUp);
+      initX = e.clientX;
+      initY = e.clientY;
+      bodyX = dragAnim.animationData.layers[4].ks.p.k[0].s[0];
+      bodyY = dragAnim.animationData.layers[4].ks.p.k[0].s[1];
+    }
+
+    function init(){
+      dragBody = document.getElementById('body');
+      dragBody.addEventListener('mousedown',bodyDown);
+    }
+
+    dragAnim.addEventListener('DOMLoaded',init);
+
+
+    </script>
+  </body>
+</html>
