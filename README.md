@@ -17,7 +17,7 @@ hence allowing us to manipulate certain properties of the layer (e.g. position).
 Note: In order for you to manipulate the animationData, the object has to have keyframes at the very start and the very end.
 The keyframes can have a position difference of just 0.1, but there has to be a change for it to work.
 
-#### More about the data
+### More about the data
 Here are some properties of the object you get from `animationData`:
 
 Name | Type | Description
@@ -40,7 +40,7 @@ Note: The keyframe properties in ks are represented by a single letter (i.e. p f
 and the coordinates may or may not be found directly, depending on how the After Effects object was made
 
 
-#### After Effects rigging
+### After Effects rigging
 Rigging up a character or object is a method for animators to simply the animation process.
 A [quick tutorial can be seen here](https://youtu.be/IJgAUkjsomA). These rigs allow us to interact with the
 bodymovin object in a more interesting manner. For example, by using the [Joysticks 'n Sliders](http://aescripts.com/joystick-n-sliders/) plugin, we can map the controllers to the cursor or the
